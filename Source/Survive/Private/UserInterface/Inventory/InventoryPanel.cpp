@@ -8,6 +8,7 @@
 #include "Components/WrapBox.h"
 #include "Player/MainChar.h"
 #include "UserInterface/Inventory/InventoryItemSlot.h"
+#include "UserInterface/Inventory/ItemDragDropOperation.h"
 
 void UInventoryPanel::NativeOnInitialized()
 {
@@ -64,5 +65,16 @@ void UInventoryPanel::RefreshInventory()
 bool UInventoryPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
 	UDragDropOperation* InOperation)
 {
-	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+//	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
+
+	if (ItemDragDrop->SourceItem && InventoryReference)
+	{
+		
+		//returning true will stop the dragdrop at this widget
+		return true;
+	}
+
+	//returning false will cause the drop to fall through to underlying widgets
+	return false;
 }

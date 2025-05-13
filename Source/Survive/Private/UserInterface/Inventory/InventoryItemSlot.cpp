@@ -3,6 +3,7 @@
 
 #include "UserInterface/Inventory/InventoryItemSlot.h"
 
+#include "IDetailTreeNode.h"
 #include "UserInterface/Inventory/InventoryTooltip.h"
 #include "ItemBase.h"
 #include "Components/Border.h"
@@ -100,7 +101,10 @@ void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const
 		UDragItemVisual* DragVisual = CreateWidget<UDragItemVisual>(this, DragItemVisualClass);
 		DragVisual->ItemIcon->SetBrushFromTexture(ItemReference->ItemAssetData.Icon);
 		DragVisual->ItemBorder->SetBrushColor(ItemBorder->GetBrushColor());
-		DragVisual->ItemQuantity->SetText(FText::AsNumber(ItemReference->Quantity));
+
+		ItemReference->ItemNumericData.bIsStackable ?
+			DragVisual->ItemQuantity->SetText(FText::AsNumber(ItemReference->Quantity))
+			: DragVisual->ItemQuantity->SetVisibility(ESlateVisibility::Collapsed);
 
 		UItemDragDropOperation* DragItemOperation = NewObject<UItemDragDropOperation>();
 		DragItemOperation->SourceItem = ItemReference;
